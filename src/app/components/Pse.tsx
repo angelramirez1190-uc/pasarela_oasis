@@ -1,19 +1,18 @@
 "use client";
 
-import { Box, Button, Divider, Grid2, Typography } from "@mui/material";
+import { Box, Button, Grid2, Typography } from "@mui/material";
 
 import { ImagesFranchise, ObjectList } from "../interfaces/interfaces";
 import { banks, imagesFranchise } from "./utils/utils";
 import { useForm } from "react-hook-form";
 import InputController from "./controllers/InputController";
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import DateController from "./controllers/DateController";
+
+import { useState } from "react";
 import SelectController from "./controllers/SelectController";
 import CountryAutoCompelete from "./controllers/CountryAutoCompelete";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import Link from "next/link";
+
 import Tyc from "./Tyc";
 
 export default function Pse({ handlePay, setOptionSelected }) {
@@ -39,8 +38,6 @@ export default function Pse({ handlePay, setOptionSelected }) {
   const {
     handleSubmit,
     control,
-    reset,
-    watch,
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {},

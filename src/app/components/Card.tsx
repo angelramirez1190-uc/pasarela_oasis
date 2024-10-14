@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Button, Divider, Grid2, Typography } from "@mui/material";
+import { Box, Button, Grid2, Typography } from "@mui/material";
 
 import { ImagesFranchise, ObjectList } from "../interfaces/interfaces";
 import { imagesFranchise } from "./utils/utils";
@@ -13,7 +13,6 @@ import SelectController from "./controllers/SelectController";
 import CountryAutoCompelete from "./controllers/CountryAutoCompelete";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import Link from "next/link";
 import Tyc from "./Tyc";
 
 export default function Card({ handlePay, setOptionSelected }) {
@@ -44,7 +43,6 @@ export default function Card({ handlePay, setOptionSelected }) {
   const {
     handleSubmit,
     control,
-    reset,
     watch,
     formState: { errors },
   } = useForm<FormData>({
@@ -63,7 +61,7 @@ export default function Card({ handlePay, setOptionSelected }) {
   };
 
   useEffect(() => {
-    let creditCardValue = watch("credit_card"); // This will now have the correct type
+    const creditCardValue = watch("credit_card"); // This will now have the correct type
     setCreditCard(selectFranchise(creditCardValue) ?? null); // Handle undefined case here
   }, [watch("credit_card")]);
 
@@ -123,6 +121,7 @@ export default function Card({ handlePay, setOptionSelected }) {
         >
           {franchises.map((franchise) => (
             <Image
+              key={franchise?.alt}
               alt={franchise?.alt}
               src={franchise?.src}
               width={franchise?.width + 20}

@@ -1,15 +1,15 @@
 import { Grid2, Typography } from "@mui/material";
 
-interface ListOption {
+interface ListOptionProp {
   id: number;
   name: string;
-  disabled?: string[];
+  disabled?: any;
 }
 
 type OptionProps = Readonly<{
   setOptionSelected: (option: number) => void;
   optionSelected: number;
-  option: ListOption;
+  option: ListOptionProp;
 }>;
 
 export default function Option({

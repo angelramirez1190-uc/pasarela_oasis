@@ -22,8 +22,6 @@ interface PaymentProps {
   setSelectedPayment: (arg0: string) => null;
 }
 
-interface SelectPayment {}
-
 export default function Payment({
   optionSelected,
   setOptionSelected,

@@ -3,11 +3,11 @@
 import { Grid2 } from "@mui/material";
 import Option from "./Option";
 import { useState } from "react";
-import ListPaymentMethod from "./Payment";
 import Payment from "./Payment";
 interface ListOption {
   id: number;
   name: string;
+  disabled?: object;
 }
 
 export default function Body() {

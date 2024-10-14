@@ -2,7 +2,6 @@ import { Box, Grid2, Typography } from "@mui/material";
 import EmailIcon from "@mui/icons-material/Email";
 import AddCardIcon from "@mui/icons-material/AddCard";
 import Image from "next/image";
-import Link from "next/link";
 import { ImagesFranchise } from "../interfaces/interfaces";
 import { imagesFranchise } from "./utils/utils";
 
@@ -57,6 +56,7 @@ export default function PaymentType({
         >
           {franchises.map((franchise) => (
             <Image
+              key={franchise?.alt}
               alt={franchise?.alt}
               src={franchise?.src}
               width={franchise?.width}

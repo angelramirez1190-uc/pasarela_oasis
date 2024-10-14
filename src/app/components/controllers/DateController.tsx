@@ -4,7 +4,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers";
 import { ControllerProps } from "@/app/interfaces/interfaces";
-import { FormHelperText, Grid2, TextField } from "@mui/material";
+import { FormHelperText, Grid2 } from "@mui/material";
 
 export default function DateController({
   control,
