@@ -23,6 +23,6 @@ export interface ControllerProps {
 }
 
 export interface ObjectList {
-  id: any;
+  id: string | number;
   value: string | number;
 }

@@ -15,9 +15,28 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Tyc from "./Tyc";
 
-export default function Card({ handlePay, setOptionSelected }) {
-  interface FormData {}
+export interface CardProps {
+  handlePay: (arg0: FormDataCard) => void;
+  setOptionSelected: (arg0: number) => void;
+}
 
+export interface FormDataCard {
+  name: string;
+  credit_card: number;
+  expiration: object;
+  cvv: number;
+  quotes: number;
+  document_type: number;
+  document_number: number;
+  email: string;
+  indicative: object;
+  phone: number;
+  country: object;
+  city: string;
+  address: string;
+  franchise?: string;
+}
+export default function Card({ handlePay, setOptionSelected }: CardProps) {
   const franchises: ImagesFranchise[] = imagesFranchise.filter(
     (e) => e.showPay
   );
@@ -45,7 +64,7 @@ export default function Card({ handlePay, setOptionSelected }) {
     control,
     watch,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<FormDataCard>({
     defaultValues: {},
     resolver: yupResolver(schema),
   });
@@ -61,8 +80,8 @@ export default function Card({ handlePay, setOptionSelected }) {
   };
 
   useEffect(() => {
-    const creditCardValue = watch("credit_card"); // This will now have the correct type
-    setCreditCard(selectFranchise(creditCardValue) ?? null); // Handle undefined case here
+    const creditCardValue = watch("credit_card")?.toString();
+    setCreditCard(selectFranchise(creditCardValue) ?? null);
   }, [watch("credit_card")]);
 
   const quotes: ObjectList[] = Array.from({ length: 36 }, (x, i) => ({
@@ -85,7 +104,7 @@ export default function Card({ handlePay, setOptionSelected }) {
     },
   ];
 
-  const onSubmit = (data: object) => {
+  const onSubmit = (data: FormDataCard) => {
     const json = {
       ...data,
       franchise: creditCard?.alt,

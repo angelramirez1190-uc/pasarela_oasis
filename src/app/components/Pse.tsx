@@ -1,13 +1,9 @@
-"use client";
-
 import { Box, Button, Grid2, Typography } from "@mui/material";
 
-import { ImagesFranchise, ObjectList } from "../interfaces/interfaces";
-import { banks, imagesFranchise } from "./utils/utils";
+import { banks } from "./utils/utils";
 import { useForm } from "react-hook-form";
 import InputController from "./controllers/InputController";
 
-import { useState } from "react";
 import SelectController from "./controllers/SelectController";
 import CountryAutoCompelete from "./controllers/CountryAutoCompelete";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -15,13 +11,24 @@ import * as yup from "yup";
 
 import Tyc from "./Tyc";
 
-export default function Pse({ handlePay, setOptionSelected }) {
-  interface FormData {}
+export interface FormDataPse {
+  name: string;
+  document_type: number;
+  bank: number;
+  document_number: number;
+  email: string;
+  indicative: object;
+  phone: number;
+  address: string;
+  franchise?: string;
+}
 
-  const franchises: ImagesFranchise[] = imagesFranchise.filter(
-    (e) => e.showPay
-  );
+export interface PseProps {
+  handlePay: (arg0: FormDataPse) => void;
+  setOptionSelected: (arg0: number) => void;
+}
 
+export default function Pse({ handlePay, setOptionSelected }: PseProps) {
   const schema = yup
     .object({
       name: yup.string().required(),
@@ -39,25 +46,10 @@ export default function Pse({ handlePay, setOptionSelected }) {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<FormDataPse>({
     defaultValues: {},
     resolver: yupResolver(schema),
   });
-
-  const [creditCard, setCreditCard] = useState<
-    ImagesFranchise | undefined | null
-  >(null);
-
-  const selectFranchise = (text: string): ImagesFranchise | undefined => {
-    return franchises.find((e) =>
-      e?.bin?.includes(parseInt(text?.slice(0, 2)))
-    );
-  };
-
-  const quotes: ObjectList[] = Array.from({ length: 36 }, (x, i) => ({
-    id: i + 1,
-    value: i + 1,
-  }));
 
   const documentType = [
     {
@@ -74,7 +66,7 @@ export default function Pse({ handlePay, setOptionSelected }) {
     },
   ];
 
-  const onSubmit = (data: object) => {
+  const onSubmit = (data: FormDataPse) => {
     const json = {
       ...data,
       franchise: "PSE",

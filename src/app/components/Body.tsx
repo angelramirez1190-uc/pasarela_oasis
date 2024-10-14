@@ -4,6 +4,9 @@ import { Grid2 } from "@mui/material";
 import Option from "./Option";
 import { useState } from "react";
 import Payment from "./Payment";
+import { FormDataPse } from "./Pse";
+import { FormDataCard } from "./Card";
+
 interface ListOption {
   id: number;
   name: string;
@@ -13,7 +16,19 @@ interface ListOption {
 export default function Body() {
   const [optionSelected, setOptionSelected] = useState<number>(1);
   const [selectedPayment, setSelectedPayment] = useState<string>("");
-  const [transactionData, setTransactionData] = useState({});
+  const [transactionData, setTransactionData] = useState<
+    FormDataCard | FormDataPse
+  >({
+    name: "",
+    document_type: 0,
+    bank: 0,
+    document_number: 0,
+    email: "",
+    indicative: {},
+    phone: 0,
+    address: "",
+    franchise: "",
+  });
 
   const options: ListOption[] = [
     {

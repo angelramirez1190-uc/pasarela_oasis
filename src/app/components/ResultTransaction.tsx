@@ -1,10 +1,19 @@
 import { Box, Button, Divider, Grid2, Typography } from "@mui/material";
+import { FormDataPse } from "./Pse";
+import { FormDataCard } from "./Card";
+import { TransactionResult } from "./Payment";
+
+interface ResultTransactionInterface {
+  transactionResult: TransactionResult;
+  transactionData: FormDataCard | FormDataPse;
+  setOptionSelected: (arg0: number) => void;
+}
 
 export default function ResultTransaction({
   transactionResult,
   transactionData,
   setOptionSelected,
-}) {
+}: ResultTransactionInterface) {
   const getDate = () => {
     const date = new Date();
     const month =
@@ -17,8 +26,11 @@ export default function ResultTransaction({
   };
 
   const getLastFourNumbers = () => {
-    const creditCard = transactionData?.credit_card?.toString();
-    return creditCard?.slice(creditCard?.length - 4, creditCard?.length);
+    if ("credit_card" in transactionData) {
+      const creditCard = transactionData?.credit_card?.toString();
+      return creditCard?.slice(creditCard?.length - 4, creditCard?.length);
+    }
+    return null;
   };
 
   const successIcon = (
@@ -72,10 +84,10 @@ export default function ResultTransaction({
   );
 
   const handleContinue = () => {
-    if (transactionResult.status) {
+    if (transactionResult?.status) {
       console.log("Angeel");
     }
-    if (!transactionResult.status) {
+    if (!transactionResult?.status) {
       setOptionSelected(2);
     }
   };

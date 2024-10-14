@@ -10,18 +10,28 @@ import {
 } from "@mui/material";
 
 import PaymentType from "./PaymentType";
-import Card from "./Card";
+import Card, { FormDataCard } from "./Card";
 import { useState } from "react";
 import ResultTransaction from "./ResultTransaction";
-import Pse from "./Pse";
+import Pse, { FormDataPse } from "./Pse";
 
 interface PaymentProps {
   optionSelected: number;
-  setOptionSelected: (arg0: number) => null;
+  setOptionSelected: (arg0: number) => void;
   selectedPayment: string;
-  setSelectedPayment: (arg0: string) => null;
+  setSelectedPayment: (arg0: string) => void;
+  transactionData: FormDataCard | FormDataPse;
+  setTransactionData: (arg0: FormDataCard | FormDataPse) => void;
 }
 
+export interface TransactionResult {
+  ref: number | string;
+  status: boolean;
+}
+export interface TransactionResult {
+  ref: number | string;
+  status: boolean;
+}
 export default function Payment({
   optionSelected,
   setOptionSelected,
@@ -31,7 +41,10 @@ export default function Payment({
   setTransactionData,
 }: PaymentProps) {
   const [transactionProgress, setTransactionProgress] = useState(false);
-  const [transactionResult, setTransactionResult] = useState([]);
+
+  const [transactionResult, setTransactionResult] = useState<
+    TransactionResult | undefined | null
+  >(undefined);
 
   const handleSelectPayment = (type: string) => {
     setSelectedPayment(type);
@@ -39,19 +52,20 @@ export default function Payment({
     return type;
   };
 
-  const handlePay = (data: object) => {
+  const handlePay = (data: FormDataCard | FormDataPse) => {
     setTransactionProgress(true);
     setTransactionData(data);
     handleSimulatePay();
+    return;
   };
 
   const handleSimulatePay = () => {
     setTimeout(() => {
       const random = Math.random() * 10;
-      const status = parseInt(random) % 2 == 0;
-
+      const status = parseInt(random.toString()) % 2 == 0;
+      const ref = (Math.random() * 1000000).toString();
       setTransactionResult({
-        ref: parseInt(Math.random() * 1000000),
+        ref,
         status,
       });
 
@@ -67,7 +81,6 @@ export default function Payment({
       justifyContent="space-around"
       alignContent="center"
       py={1}
-      // height="50vh"
     >
       <Grid2
         size={{ xs: 11, md: 5.5 }}
@@ -81,6 +94,7 @@ export default function Payment({
             handleSelectPayment={handleSelectPayment}
           />
         )}
+
         {optionSelected == 2 &&
           (selectedPayment == "pse" ? (
             <Pse handlePay={handlePay} setOptionSelected={setOptionSelected} />
@@ -92,7 +106,8 @@ export default function Payment({
               />
             </Grid2>
           ) : null)}
-        {optionSelected == 3 && (
+
+        {optionSelected == 3 && transactionResult && transactionData && (
           <ResultTransaction
             transactionResult={transactionResult}
             transactionData={transactionData}
@@ -151,8 +166,8 @@ export default function Payment({
       </Grid2>
       {transactionProgress && (
         <Backdrop open={transactionProgress}>
-          <Grid2>
-            <CircularProgress color="white" />
+          <Grid2 container justifyContent="center">
+            <CircularProgress color="info" />
             <Typography color="white" textAlign={"center"}>
               Transaccion en proceso
             </Typography>
