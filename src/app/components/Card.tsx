@@ -35,6 +35,10 @@ export interface FormDataCard {
   city: string;
   address: string;
   franchise?: string;
+  id?: number | string | undefined;
+  total_reserva?: number | string | undefined;
+  checkin?: number | string | undefined;
+  checkout?: number | string | undefined | null;
 }
 export default function Card({ handlePay, setOptionSelected }: CardProps) {
   const franchises: ImagesFranchise[] = imagesFranchise.filter(

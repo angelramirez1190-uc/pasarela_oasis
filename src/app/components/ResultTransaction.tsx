@@ -187,7 +187,7 @@ export default function ResultTransaction({
             Total
           </Typography>
           <Typography variant="h6" fontWeight={701}>
-            {transactionResult?.ref}
+            {transactionData?.total_reserva}
           </Typography>
         </Grid2>
       </Grid2>
