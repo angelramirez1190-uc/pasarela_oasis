@@ -8,6 +8,7 @@ export async function createReservation(
   id: number | string | undefined
 ) {
   try {
+    console.log({ status, value, id });
     const result = await pool.query(
       `UPDATE tasks_reserva 
          SET estado = $1, valor = $2 
@@ -15,6 +16,8 @@ export async function createReservation(
          RETURNING *`,
       [status, value, id]
     );
+    console.log(result.rows[0]); // Asegúrate de imprimir solo el primer resultado
+    return result.rows[0];
   } catch (error) {
     console.error("Error inserting reservation:", error);
   }
