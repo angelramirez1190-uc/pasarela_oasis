@@ -2,10 +2,12 @@
 
 import { Grid2 } from "@mui/material";
 import Option from "./Option";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Payment from "./Payment";
 import { FormDataPse } from "./Pse";
 import { FormDataCard } from "./Card";
+import { useSearchParams } from "next/navigation";
+import { selectReservation } from "@/utils/serverActions";
 
 interface ListOption {
   id: number;
@@ -16,6 +18,7 @@ interface ListOption {
 export default function Body() {
   const [optionSelected, setOptionSelected] = useState<number>(1);
   const [selectedPayment, setSelectedPayment] = useState<string>("");
+  const [reservation, setReservation] = useState(null);
   const [transactionData, setTransactionData] = useState<
     FormDataCard | FormDataPse
   >({
@@ -29,6 +32,41 @@ export default function Body() {
     address: "",
     franchise: "",
   });
+  const searchParams = useSearchParams() ?? "";
+
+  const handleSelect = async () => {
+    try {
+      const reserva = searchParams.get("reserva") ?? "";
+      const reservationData = await selectReservation(reserva);
+
+      if (reservationData) {
+        const calculate = () => {
+          const values = [
+            { name: "individual", value: 50000 },
+            { name: "deluxe", value: 85000 },
+            { name: "suite", value: 100000 },
+          ];
+
+          const getValue = values.find(
+            (index) => index.name === reservationData?.habitacion
+          );
+
+          const differenceInDays = Math.abs(
+            reservationData?.checkin - reservationData?.checkout
+          );
+          const days = differenceInDays / (1000 * 60 * 60 * 24);
+
+          reservationData.total_reserva = Math.abs(
+            reservationData?.adultos * days * (getValue?.value ?? 1)
+          );
+        };
+        calculate();
+        setReservation(reservationData);
+      }
+    } catch (error) {
+      console.error("Error handling reservation:", error);
+    }
+  };
 
   const options: ListOption[] = [
     {
@@ -45,6 +83,11 @@ export default function Body() {
       disabled: transactionData,
     },
   ];
+
+  useEffect(() => {
+    handleSelect();
+  }, []);
+
   return (
     <Grid2
       container
@@ -83,6 +126,7 @@ export default function Body() {
           setSelectedPayment={setSelectedPayment}
           transactionData={transactionData}
           setTransactionData={setTransactionData}
+          reservation={reservation}
         />
       </Grid2>
     </Grid2>

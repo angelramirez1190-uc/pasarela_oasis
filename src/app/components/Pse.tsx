@@ -21,8 +21,11 @@ export interface FormDataPse {
   phone: number;
   address: string;
   franchise?: string;
+  id?: number | string | undefined;
+  total_reserva?: number | string | undefined;
+  checkin?: string | number | undefined;
+  checkout?: string | number | undefined;
 }
-
 export interface PseProps {
   handlePay: (arg0: FormDataPse) => void;
   setOptionSelected: (arg0: number) => void;

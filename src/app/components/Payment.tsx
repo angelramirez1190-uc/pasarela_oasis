@@ -14,6 +14,7 @@ import Card, { FormDataCard } from "./Card";
 import { useState } from "react";
 import ResultTransaction from "./ResultTransaction";
 import Pse, { FormDataPse } from "./Pse";
+import { createReservation } from "@/utils/serverActions";
 
 interface PaymentProps {
   optionSelected: number;
@@ -22,11 +23,13 @@ interface PaymentProps {
   setSelectedPayment: (arg0: string) => void;
   transactionData: FormDataCard | FormDataPse;
   setTransactionData: (arg0: FormDataCard | FormDataPse) => void;
+  reservation?: FormDataCard | FormDataPse | null;
 }
 
 export interface TransactionResult {
   ref: number | string;
   status: boolean;
+  total_reserva?: number;
 }
 export interface TransactionResult {
   ref: number | string;
@@ -39,6 +42,7 @@ export default function Payment({
   setSelectedPayment,
   transactionData,
   setTransactionData,
+  reservation,
 }: PaymentProps) {
   const [transactionProgress, setTransactionProgress] = useState(false);
 
@@ -54,7 +58,7 @@ export default function Payment({
 
   const handlePay = (data: FormDataCard | FormDataPse) => {
     setTransactionProgress(true);
-    setTransactionData(data);
+    setTransactionData({ ...data, ...reservation });
     handleSimulatePay();
     return;
   };
@@ -68,10 +72,23 @@ export default function Payment({
         ref,
         status,
       });
-
+      createReservation(
+        status,
+        transactionData?.total_reserva,
+        transactionData?.id
+      );
       setTransactionProgress(false);
       setOptionSelected(3);
     }, 5000);
+  };
+
+  const formatDate = (date?: string | number): string => {
+    if (!date) return ""; // Devuelve cadena vacía si no hay fecha
+    const dateObject = new Date(date);
+    const year = dateObject.getFullYear();
+    const month = String(dateObject.getMonth() + 1).padStart(2, "0");
+    const day = String(dateObject.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
   };
 
   return (
@@ -126,11 +143,17 @@ export default function Payment({
           <Grid2 size={{ xs: 10 }} m="auto">
             <Typography variant="h6">TU COMPRA</Typography>
             <Typography my={2}>
-              Hotel Oasis Reserva N.1234 desde el 2024-10-12 hasta el 2024-10-13
+              {`Hotel Oasis Reserva N.${reservation?.id ?? ""} desde el ${
+                reservation?.checkin ? formatDate(reservation?.checkin) : ""
+              } hasta el ${
+                reservation?.checkout ? formatDate(reservation?.checkout) : ""
+              }`}
             </Typography>
             <Box display="flex" justifyContent="space-between" my={2}>
               <Typography>Total</Typography>
-              <Typography fontWeight={701}>$714,000.00 COP</Typography>
+              <Typography fontWeight={701}>
+                ${reservation?.total_reserva ?? 0} COP
+              </Typography>
             </Box>
           </Grid2>
         </Grid2>
