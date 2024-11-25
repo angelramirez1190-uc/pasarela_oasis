@@ -4,8 +4,8 @@ import { pool } from "@/utils/dbConnect";
 
 export async function createReservation(
   status: boolean,
-  value: number | string | undefined,
-  id: number | string | undefined
+  value: number | string | undefined | unknown,
+  id: number | string | undefined | unknown
 ) {
   try {
     console.log({ status, value, id });
