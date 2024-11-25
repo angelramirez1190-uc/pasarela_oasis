@@ -63,7 +63,7 @@ export default function Payment({
     return;
   };
 
-  const handleSimulatePay = (body: object) => {
+  const handleSimulatePay = (body: Record<string, unknown>) => {
     setTimeout(async () => {
       const random = Math.random() * 10;
       const status = Math.floor(random) % 2 === 0; // Para obtener un valor booleano
