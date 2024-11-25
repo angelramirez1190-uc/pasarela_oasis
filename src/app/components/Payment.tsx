@@ -59,24 +59,42 @@ export default function Payment({
   const handlePay = (data: FormDataCard | FormDataPse) => {
     setTransactionProgress(true);
     setTransactionData({ ...data, ...reservation });
-    handleSimulatePay();
+    handleSimulatePay({ ...data, ...reservation });
     return;
   };
 
-  const handleSimulatePay = () => {
-    setTimeout(() => {
+  const handleSimulatePay = (body: object) => {
+    setTimeout(async () => {
       const random = Math.random() * 10;
-      const status = parseInt(random.toString()) % 2 == 0;
+      const status = Math.floor(random) % 2 === 0; // Para obtener un valor booleano
       const ref = (Math.random() * 1000000).toString();
+      console.log(transactionData);
+
+      // Establecer resultado de la transacción
       setTransactionResult({
         ref,
         status,
       });
-      createReservation(
-        status,
-        transactionData?.total_reserva,
-        transactionData?.id
-      );
+
+      let response;
+      let attempts = 0;
+      const maxAttempts = 5; // Limite de intentos para evitar bucles infinitos
+
+      // Intentar crear la reserva hasta que obtengas una respuesta válida o alcance el número máximo de intentos
+      do {
+        response = await createReservation(
+          status,
+          body?.total_reserva,
+          body?.id
+        );
+        attempts++;
+        if (attempts >= maxAttempts) {
+          console.log("Exceeded maximum attempts");
+          break;
+        }
+      } while (!response);
+
+      console.log(response);
       setTransactionProgress(false);
       setOptionSelected(3);
     }, 5000);
