@@ -33,6 +33,10 @@ export default function ResultTransaction({
     return null;
   };
 
+  const handleReturn = () => {
+    window.location.href = "http://34.71.104.233:8000/check_in";
+  };
+
   const successIcon = (
     <svg
       width="100"
@@ -194,6 +198,15 @@ export default function ResultTransaction({
       <Grid2 size={{ xs: 8 }} m="auto" mt={3}>
         <Button onClick={handleContinue} variant="contained" fullWidth>
           {transactionResult.status ? "Aceptar" : "Intentar Nuevamente"}
+        </Button>
+
+        <Button
+          onClick={handleReturn}
+          variant="outlined"
+          fullWidth
+          style={{ marginTop: "10px" }}
+        >
+          Volver a la pagina
         </Button>
       </Grid2>
     </Grid2>
